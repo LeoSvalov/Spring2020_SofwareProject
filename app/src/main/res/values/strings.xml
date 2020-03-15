@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AutomatedAttendanceMonitoring</string>
+    <string name="gather_attendance">Gather attendance</string>
+    <string name="stop_gathering_attendance">Stop gathering attendance</string>
+    <string name="mark_me">Mark me</string>
+    <string name="fullname_placeholder">Full name</string>
+    <string name="fullname_input_hint">Input here your full name that will be displayed to the teacher</string>
+</resources>
