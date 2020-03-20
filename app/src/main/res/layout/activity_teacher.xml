@@ -7,7 +7,7 @@
     tools:context=".TeacherActivity">
 
     <Button
-        android:id="@+id/gather_attendance_button"
+        android:id="@+id/gatherAttendanceButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/discovered_devices"
+        android:id="@+id/attendanceList"
         android:layout_width="365dp"
         android:layout_height="346dp"
         android:ems="10"
@@ -27,6 +27,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gather_attendance_button" />
+        app:layout_constraintTop_toBottomOf="@+id/gatherAttendanceButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

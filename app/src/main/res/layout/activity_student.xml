@@ -7,7 +7,7 @@
     tools:context=".StudentActivity">
 
     <EditText
-        android:id="@+id/fullname_input"
+        android:id="@+id/fullnameInput"
         android:layout_width="wrap_content"
         android:layout_height="42dp"
         android:layout_marginTop="240dp"
@@ -16,19 +16,19 @@
         android:hint="@string/fullname_input_hint"
         android:inputType="textPersonName"
         android:text="@string/fullname_placeholder"
-        app:layout_constraintEnd_toStartOf="@+id/button"
+        app:layout_constraintEnd_toStartOf="@+id/markMeButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/markMeButton"
         android:layout_width="wrap_content"
         android:layout_height="49dp"
         android:layout_marginTop="240dp"
         android:onClick="markMe"
         android:text="@string/mark_me"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/fullname_input"
+        app:layout_constraintStart_toEndOf="@+id/fullnameInput"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
