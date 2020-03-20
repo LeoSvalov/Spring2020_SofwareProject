@@ -1,11 +1,13 @@
 package com.example.automatedattendancemonitoring;
 
+import android.app.AlertDialog;
 import android.bluetooth.le.AdvertiseCallback;
 import android.bluetooth.le.AdvertiseSettings;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,7 +32,7 @@ public class StudentActivity extends AppCompatActivity {
         findViewById(R.id.markMeButton).setEnabled(false);
         findViewById(R.id.fullnameInput).setEnabled(false);
 
-        //TODO: add loading indicator
+        Toast.makeText(StudentActivity.this, R.string.trying_to_start_marking, Toast.LENGTH_LONG).show();
 
         BluetoothHelper.enableAndExecute(
                 StudentActivity.this,
@@ -46,14 +48,17 @@ public class StudentActivity extends AppCompatActivity {
     }
 
     private void advertisementStarted(AdvertiseSettings settingsInEffect) {
-        //TODO: add indicator
+        Toast.makeText(StudentActivity.this, R.string.marking_started, Toast.LENGTH_LONG).show();
     }
 
     private void advertisementFailed(int errorCode) {
         findViewById(R.id.markMeButton).setEnabled(true);
         findViewById(R.id.fullnameInput).setEnabled(true);
 
-        //TODO: show error dialog
+        new AlertDialog.Builder(StudentActivity.this)
+                .setTitle(R.string.marking_failed_title)
+                .setMessage(R.string.marking_failed_message)
+                .show();
 
         Log.e("student", "advertising failed: " + errorCode);
     }

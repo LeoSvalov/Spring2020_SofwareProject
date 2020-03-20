@@ -4,5 +4,15 @@
     <string name="stop_gathering_attendance">Stop gathering attendance</string>
     <string name="mark_me">Mark me</string>
     <string name="fullname_input_hint">Input your full name</string>
-    <string name="fullname_placeholder">Full name</string>
+    <string name="table_header_fullname">Full name</string>
+    <string name="table_header_participation">Points</string>
+    <string name="bluetooth_enabling_warning">Bluetooth will be automatically enabled</string>
+    <string name="gathering_attendance_failed_title">Gathering attendance failed</string>
+    <string name="gathering_attendance_failed_message">The app was not able to start Bluetooth LE scan.
+        Check app permissions and try again</string>
+    <string name="marking_failed_title">Marking attendance failed</string>
+    <string name="marking_failed_message">The app was not able to start Bluetooth LE advertisement.
+        Check app permissions and try again</string>
+    <string name="trying_to_start_marking">Trying to start marking</string>
+    <string name="marking_started">Sending data to teacher</string>
 </resources>

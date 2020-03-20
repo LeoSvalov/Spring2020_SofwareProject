@@ -1,10 +1,13 @@
 package com.example.automatedattendancemonitoring;
 
+import android.app.AlertDialog;
 import android.bluetooth.le.ScanCallback;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,7 +42,7 @@ public class TeacherActivity extends AppCompatActivity {
                 TeacherActivity.this,
                 () -> scanCallback = BluetoothHelper.scan(
                         TeacherActivity.this,
-                        this::addStudentToTheList,
+                        this::addStudentToTheTable,
                         this::gatheringFailed
                 )
         );
@@ -56,12 +59,20 @@ public class TeacherActivity extends AppCompatActivity {
         }
     }
 
-    private void addStudentToTheList(String name) {
+    private void addStudentToTheTable(String name) {
         if (names.contains(name)) return;
         names.add(name);
 
-        TextView list = findViewById(R.id.attendanceList);
-        list.setText(name + "\n" + list.getText());
+        TextView nameElement = new TextView(TeacherActivity.this);
+        nameElement.setText(name);
+
+        TextView points = new TextView(TeacherActivity.this);
+        points.setText("0");
+
+        TableRow row = new TableRow(TeacherActivity.this);
+        row.addView(nameElement);
+        row.addView(points);
+        ((TableLayout) findViewById(R.id.attendanceTable)).addView(row);
     }
 
     private void gatheringFailed(int errorCode) {
@@ -69,7 +80,10 @@ public class TeacherActivity extends AppCompatActivity {
         toggleButton.setText(R.string.gather_attendance);
         toggleButton.setOnClickListener(this::gatherAttendance);
 
-        //TODO: show error dialog
+        new AlertDialog.Builder(TeacherActivity.this)
+                .setTitle(R.string.gathering_attendance_failed_title)
+                .setMessage(R.string.gathering_attendance_failed_message)
+                .show();
 
         Log.e("teacher", "scan failed: " + errorCode);
     }
