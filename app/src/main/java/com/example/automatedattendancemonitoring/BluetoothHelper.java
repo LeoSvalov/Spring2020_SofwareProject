@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.ParcelUuid;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
@@ -140,11 +141,13 @@ public final class BluetoothHelper {
             @Override
             public void onStartSuccess(AdvertiseSettings settingsInEffect) {
                 if (successCallback != null) successCallback.accept(settingsInEffect);
+                Log.i("advertise", "Advertising started successfully");
             }
 
             @Override
             public void onStartFailure(int errorCode) {
                 if (errorCallback != null) errorCallback.accept(errorCode);
+                else Log.w("advertise", "Advertising failed, but no errorCallback provided: " + errorCode);
             }
         };
 
@@ -190,10 +193,12 @@ public final class BluetoothHelper {
                     dataBytes = result.getScanRecord().getServiceData(BluetoothHelper.UUID);
                 }
                 if (dataBytes == null) {
+                    Log.w("scan", "got empty result");
                     return;
                 }
 
                 String data = new String(dataBytes, StandardCharsets.UTF_8);
+                Log.i("scan", "got scan result: " + data);
                 successCallback.accept(data);
             }
 
@@ -207,6 +212,7 @@ public final class BluetoothHelper {
             @Override
             public void onScanFailed(int errorCode) {
                 if (errorCallback != null) errorCallback.accept(errorCode);
+                else Log.w("scan", "Scanning failed, but no errorCallback provided: " + errorCode);
             }
         };
 

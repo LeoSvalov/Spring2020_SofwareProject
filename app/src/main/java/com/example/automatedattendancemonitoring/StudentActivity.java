@@ -3,6 +3,7 @@ package com.example.automatedattendancemonitoring;
 import android.bluetooth.le.AdvertiseCallback;
 import android.bluetooth.le.AdvertiseSettings;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -53,5 +54,7 @@ public class StudentActivity extends AppCompatActivity {
         findViewById(R.id.fullnameInput).setEnabled(true);
 
         //TODO: show error dialog
+
+        Log.e("student", "advertising failed: " + errorCode);
     }
 }

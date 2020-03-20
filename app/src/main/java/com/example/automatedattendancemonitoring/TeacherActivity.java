@@ -2,6 +2,7 @@ package com.example.automatedattendancemonitoring;
 
 import android.bluetooth.le.ScanCallback;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -69,5 +70,7 @@ public class TeacherActivity extends AppCompatActivity {
         toggleButton.setOnClickListener(this::gatherAttendance);
 
         //TODO: show error dialog
+
+        Log.e("teacher", "scan failed: " + errorCode);
     }
 }
