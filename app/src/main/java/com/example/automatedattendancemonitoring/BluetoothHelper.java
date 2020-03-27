@@ -15,11 +15,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.os.ParcelUuid;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
+
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.tasks.Task;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -88,15 +97,45 @@ public final class BluetoothHelper {
         return stateChangedReceiver;
     }
 
+    /**
+     * Turns on geolocation services. This is needed for scanning on some android versions
+     *
+     * @param activity activity, which will be used to request permissions
+     */
+    private static void turnOnGPS(Activity activity) {
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+
+        Task<LocationSettingsResponse> locationSettingsTask = LocationServices.getSettingsClient(activity).checkLocationSettings(builder.build());
+        locationSettingsTask.addOnCompleteListener(task -> {
+            try {
+                LocationSettingsResponse response = task.getResult(ApiException.class);
+            } catch (ResolvableApiException resolvable) {
+                try {
+                    resolvable.startResolutionForResult(activity, 0);
+                } catch (IntentSender.SendIntentException e) {
+                    Log.w("GPS", "Could not enable GPS");
+                }
+            } catch (ApiException exception) {
+                Log.w("GPS", "Could not enable GPS");
+            }
+        });
+    }
+
+
 
     // Advertising functions
 
 
     /**
-     * Enables all necessary services and
+     * Asks for all necessary permissions, enables all necessary services and
      * starts Bluetooth LE advertising using {@link #advertise(String, AdvertiseCallback)}.
      * If advertising succeeds, {@code onAdvertisingStarted} is executed.
-     * If advertising is failed for some reason, {@code onError} is called.
+     * If user denies giving permission or enabling service or advertising is failed
+     * for any other reason, {@code onError} is called.
      * Returns {@link AdvertiseCallback} instance, which can be used to stop advertising
      * by passing it to {@link BluetoothLeAdvertiser#stopAdvertising(AdvertiseCallback)}.
      *
@@ -134,7 +173,7 @@ public final class BluetoothHelper {
      * Starts Bluetooth LE advertising with default settings and given {@link AdvertiseCallback}.
      * Advertisement data consists of {@link #UUID} and {@code data} parameter.
      *
-     * @param data     string of data to be advertised
+     * @param data string of data to be advertised
      * @param callback callback that will be used to start the advertising
      */
     public static void advertise(@NotNull String data,
@@ -155,14 +194,16 @@ public final class BluetoothHelper {
     }
 
 
+
     // Scan functions
 
 
     /**
-     * Enables all necessary services and
+     * Asks for all necessary permissions, enables all necessary services and
      * starts Bluetooth LE scan using {@link #scan(ScanCallback)}.
      * If scan is successful, passes all received scans to {@code onScanResults}.
-     * If scan is failed for some reason, {@code onError} is called.
+     * If user denies giving permission or enabling service or scan is failed
+     * for any other reason, {@code onError} is called.
      * Returns {@link ScanCallback} instance, which can be used to stop scan
      * by passing it to {@link BluetoothLeScanner#stopScan(ScanCallback)}.
      *
@@ -204,6 +245,8 @@ public final class BluetoothHelper {
                 else Log.w("scan", "Scanning failed, but no onError provided: " + errorCode);
             }
         };
+
+        turnOnGPS(activity);
 
         enableBluetoothAndExecute(activity, () -> scan(callback));
 
