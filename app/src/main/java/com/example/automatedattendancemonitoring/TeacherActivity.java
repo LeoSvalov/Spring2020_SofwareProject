@@ -7,17 +7,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TeacherActivity extends AppCompatActivity {
     private ScanCallback scanCallback;
-    private Set<String> names = new HashSet<>();
+    private Map<String, Student> names = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +26,7 @@ public class TeacherActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         if (scanCallback != null) {
-            BluetoothHelper.SCANNER.stopScan(scanCallback);
+            BluetoothHelper.ADAPTER.getBluetoothLeScanner().stopScan(scanCallback);
         }
         super.onDestroy();
     }
@@ -38,13 +36,10 @@ public class TeacherActivity extends AppCompatActivity {
         toggleButton.setText(R.string.stop_gathering_attendance);
         toggleButton.setOnClickListener(this::stopGatheringAttendance);
 
-        BluetoothHelper.enableAndExecute(
+        scanCallback = BluetoothHelper.scan(
                 TeacherActivity.this,
-                () -> scanCallback = BluetoothHelper.scan(
-                        TeacherActivity.this,
-                        this::addStudentToTheTable,
-                        this::gatheringFailed
-                )
+                this::addStudentToTheTable,
+                this::gatheringFailed
         );
     }
 
@@ -54,25 +49,16 @@ public class TeacherActivity extends AppCompatActivity {
         toggleButton.setOnClickListener(this::gatherAttendance);
 
         if (scanCallback != null) {
-            BluetoothHelper.SCANNER.stopScan(scanCallback);
+            BluetoothHelper.ADAPTER.getBluetoothLeScanner().stopScan(scanCallback);
             scanCallback = null;
         }
     }
 
     private void addStudentToTheTable(String name) {
-        if (names.contains(name)) return;
-        names.add(name);
-
-        TextView nameElement = new TextView(TeacherActivity.this);
-        nameElement.setText(name);
-
-        TextView points = new TextView(TeacherActivity.this);
-        points.setText("0");
-
-        TableRow row = new TableRow(TeacherActivity.this);
-        row.addView(nameElement);
-        row.addView(points);
-        ((TableLayout) findViewById(R.id.attendanceTable)).addView(row);
+        if (names.containsKey(name)) return;
+        Student student = new Student(TeacherActivity.this, name);
+        names.put(name, student);
+        ((TableLayout) findViewById(R.id.attendanceTable)).addView(student.getRowView());
     }
 
     private void gatheringFailed(int errorCode) {

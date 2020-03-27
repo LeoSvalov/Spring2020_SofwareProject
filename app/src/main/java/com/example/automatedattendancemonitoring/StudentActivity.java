@@ -23,7 +23,7 @@ public class StudentActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         if (advertiseCallback != null) {
-            BluetoothHelper.ADVERTISER.stopAdvertising(advertiseCallback);
+            BluetoothHelper.ADAPTER.getBluetoothLeAdvertiser().stopAdvertising(advertiseCallback);
         }
         super.onDestroy();
     }
@@ -34,16 +34,12 @@ public class StudentActivity extends AppCompatActivity {
 
         Toast.makeText(StudentActivity.this, R.string.trying_to_start_marking, Toast.LENGTH_LONG).show();
 
-        BluetoothHelper.enableAndExecute(
+        EditText fullnameInput = findViewById(R.id.fullnameInput);
+        advertiseCallback = BluetoothHelper.advertise(
                 StudentActivity.this,
-                () -> {
-                    EditText fullnameInput = findViewById(R.id.fullnameInput);
-                    advertiseCallback = BluetoothHelper.advertise(
-                            fullnameInput.getText().toString(),
-                            this::advertisementStarted,
-                            this::advertisementFailed
-                    );
-                }
+                fullnameInput.getText().toString(),
+                this::advertisementStarted,
+                this::advertisementFailed
         );
     }
 

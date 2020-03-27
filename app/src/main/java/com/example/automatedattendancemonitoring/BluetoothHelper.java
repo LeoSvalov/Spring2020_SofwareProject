@@ -1,6 +1,5 @@
 package com.example.automatedattendancemonitoring;
 
-import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.le.AdvertiseCallback;
@@ -45,40 +44,10 @@ public final class BluetoothHelper {
      */
     public static final ParcelUuid UUID = ParcelUuid.fromString("00000000-0000-1000-8000-00805F9B34FB");
 
-
-
-    // Services
-
     /**
      * Default bluetooth adapter
      */
     public static final BluetoothAdapter ADAPTER = BluetoothAdapter.getDefaultAdapter();
-
-    /**
-     * Default bluetooth LE advertiser
-     */
-    public static final BluetoothLeAdvertiser ADVERTISER = (ADAPTER == null) ? null : ADAPTER.getBluetoothLeAdvertiser();
-
-    /**
-     * Default bluetooth LE scanner
-     */
-    public static final BluetoothLeScanner SCANNER = (ADAPTER == null) ? null : ADAPTER.getBluetoothLeScanner();
-
-
-
-    // Request constants
-
-    /**
-     * Constant used in {@link Activity#startActivityForResult(Intent, int)}
-     * to ask user to enable bluetooth
-     */
-    public static final int REQUEST_ENABLE = 1;
-
-    /**
-     * Constant used in {@link Activity#requestPermissions(String[], int)}
-     * to ask for {@link Manifest.permission#ACCESS_FINE_LOCATION}
-     */
-    public static final int REQUEST_ACCESS_LOCATION_PERMISSION = 2;
 
 
 
@@ -99,7 +68,7 @@ public final class BluetoothHelper {
      * @return {@link BroadcastReceiver} instance used to capture bluetooth enabling
      * of {@code null}, if bluetooth was already enabled
      */
-    public static BroadcastReceiver enableAndExecute(Activity activity, Runnable toExecute) {
+    public static BroadcastReceiver enableBluetoothAndExecute(Activity activity, Runnable toExecute) {
         if (ADAPTER.isEnabled()) {
             toExecute.run();
             return null;
@@ -119,39 +88,58 @@ public final class BluetoothHelper {
         return stateChangedReceiver;
     }
 
+
+    // Advertising functions
+
+
     /**
-     * Starts LE advertising with default settings.
-     * Advertisement data consists of {@link #UUID} and {@code data} parameter.
-     * If advertising succeeds and {@code successCallback} is not {@code null},
-     * {@code settingsInEffect} is passed to {@code successCallback}.
-     * If and advertising is failed and {@code errorCallback} is not {@code null},
-     * {@code errorCode} is passed to {@code errorCallback}.
+     * Enables all necessary services and
+     * starts Bluetooth LE advertising using {@link #advertise(String, AdvertiseCallback)}.
+     * If advertising succeeds, {@code onAdvertisingStarted} is executed.
+     * If advertising is failed for some reason, {@code onError} is called.
      * Returns {@link AdvertiseCallback} instance, which can be used to stop advertising
      * by passing it to {@link BluetoothLeAdvertiser#stopAdvertising(AdvertiseCallback)}.
      *
+     * @param activity activity, which will be used to request permissions
      * @param data string of data to be advertised
-     * @param successCallback function to be executed in case starting advertising is started successfully
-     * @param errorCallback function to be executed in case starting advertising is failed
+     * @param onAdvertisingStarted function to be executed in case starting advertising is started successfully
+     * @param onError function to be executed in case starting advertising is failed
      * @return {@link AdvertiseCallback} instance used in starting advertising
      */
-    public static AdvertiseCallback advertise(@NotNull String data,
-                                              @Nullable Consumer<AdvertiseSettings> successCallback,
-                                              @Nullable Consumer<Integer> errorCallback) {
+    public static AdvertiseCallback advertise(@NotNull Activity activity,
+                                              @NotNull String data,
+                                              @Nullable Consumer<AdvertiseSettings> onAdvertisingStarted,
+                                              @Nullable Consumer<Integer> onError) {
         AdvertiseCallback callback = new AdvertiseCallback() {
             @Override
             public void onStartSuccess(AdvertiseSettings settingsInEffect) {
-                if (successCallback != null) successCallback.accept(settingsInEffect);
+                if (onAdvertisingStarted != null) onAdvertisingStarted.accept(settingsInEffect);
                 Log.i("advertise", "Advertising started successfully");
             }
 
             @Override
             public void onStartFailure(int errorCode) {
-                if (errorCallback != null) errorCallback.accept(errorCode);
-                else Log.w("advertise", "Advertising failed, but no errorCallback provided: " + errorCode);
+                if (onError != null) onError.accept(errorCode);
+                else
+                    Log.w("advertise", "Advertising failed, but no onError provided: " + errorCode);
             }
         };
 
-        ADVERTISER.startAdvertising(
+        enableBluetoothAndExecute(activity, () -> advertise(data, callback));
+
+        return callback;
+    }
+
+    /**
+     * Starts Bluetooth LE advertising with default settings and given {@link AdvertiseCallback}.
+     * Advertisement data consists of {@link #UUID} and {@code data} parameter.
+     *
+     * @param data     string of data to be advertised
+     * @param callback callback that will be used to start the advertising
+     */
+    public static void advertise(@NotNull String data,
+                                 @NotNull AdvertiseCallback callback) {
+        ADAPTER.getBluetoothLeAdvertiser().startAdvertising(
                 // settings
                 new AdvertiseSettings.Builder().build(),
 
@@ -164,27 +152,28 @@ public final class BluetoothHelper {
                 // callback
                 callback
         );
-
-        return callback;
     }
 
+
+    // Scan functions
+
+
     /**
-     * Starts LE scan with default settings and one filter by {@link #UUID}.
-     * If scan is successful, passes all received scans to {@code successCallback}.
-     * If advertising is failed and {@code errorCallback} is not {@code null},
-     * {@code errorCode} is passed to {@code errorCallback}.
+     * Enables all necessary services and
+     * starts Bluetooth LE scan using {@link #scan(ScanCallback)}.
+     * If scan is successful, passes all received scans to {@code onScanResults}.
+     * If scan is failed for some reason, {@code onError} is called.
      * Returns {@link ScanCallback} instance, which can be used to stop scan
      * by passing it to {@link BluetoothLeScanner#stopScan(ScanCallback)}.
      *
-     * @param activity        activity, which will be used to request
-     *                        {@link Manifest.permission#ACCESS_FINE_LOCATION} permission
-     * @param successCallback function to pass received scan results to
-     * @param errorCallback   function to be executed in case starting scan is failed
+     * @param activity activity, which will be used to request permissions
+     * @param onScanResults function to pass received scan results to
+     * @param onError function to be executed in case starting scan is failed
      * @return {@link ScanCallback} instance used in starting scan
      */
     public static ScanCallback scan(@NotNull Activity activity,
-                                    @NotNull Consumer<String> successCallback,
-                                    @Nullable Consumer<Integer> errorCallback) {
+                                    @NotNull Consumer<String> onScanResults,
+                                    @Nullable Consumer<Integer> onError) {
         ScanCallback callback = new ScanCallback() {
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
@@ -199,7 +188,7 @@ public final class BluetoothHelper {
 
                 String data = new String(dataBytes, StandardCharsets.UTF_8);
                 Log.i("scan", "got scan result: " + data);
-                successCallback.accept(data);
+                onScanResults.accept(data);
             }
 
             @Override
@@ -211,12 +200,24 @@ public final class BluetoothHelper {
 
             @Override
             public void onScanFailed(int errorCode) {
-                if (errorCallback != null) errorCallback.accept(errorCode);
-                else Log.w("scan", "Scanning failed, but no errorCallback provided: " + errorCode);
+                if (onError != null) onError.accept(errorCode);
+                else Log.w("scan", "Scanning failed, but no onError provided: " + errorCode);
             }
         };
 
-        SCANNER.startScan(
+        enableBluetoothAndExecute(activity, () -> scan(callback));
+
+        return callback;
+    }
+
+    /**
+     * Starts Bluetooth LE scan with default settings,
+     * one filter by {@link #UUID} and given {@link ScanCallback}.
+     *
+     * @param callback callback that will be used to start the scan
+     */
+    public static void scan(@NotNull ScanCallback callback) {
+        ADAPTER.getBluetoothLeScanner().startScan(
                 //filters
                 Collections.singletonList(
                         new ScanFilter.Builder()
@@ -230,8 +231,6 @@ public final class BluetoothHelper {
                 //callback
                 callback
         );
-
-        return callback;
     }
 
 }
