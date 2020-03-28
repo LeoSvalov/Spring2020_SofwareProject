@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,8 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TeacherActivity extends AppCompatActivity {
-    private ScanCallback scanCallback;
-    private Map<String, Student> names = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +30,11 @@ public class TeacherActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+
+    //Automatic gathering
+
     public void gatherAttendance(View v) {
-        Button toggleButton = (Button) v;
-        toggleButton.setText(R.string.stop_gathering_attendance);
-        toggleButton.setOnClickListener(this::stopGatheringAttendance);
+        changeGatheringButton(true);
 
         scanCallback = BluetoothHelper.scan(
                 TeacherActivity.this,
@@ -44,9 +44,7 @@ public class TeacherActivity extends AppCompatActivity {
     }
 
     public void stopGatheringAttendance(View v) {
-        Button toggleButton = (Button) v;
-        toggleButton.setText(R.string.gather_attendance);
-        toggleButton.setOnClickListener(this::gatherAttendance);
+        changeGatheringButton(false);
 
         if (scanCallback != null) {
             BluetoothHelper.ADAPTER.getBluetoothLeScanner().stopScan(scanCallback);
@@ -54,17 +52,8 @@ public class TeacherActivity extends AppCompatActivity {
         }
     }
 
-    private void addStudentToTheTable(String name) {
-        if (names.containsKey(name)) return;
-        Student student = new Student(TeacherActivity.this, name);
-        names.put(name, student);
-        ((TableLayout) findViewById(R.id.attendanceTable)).addView(student.getRowView());
-    }
-
     private void gatheringFailed(int errorCode) {
-        Button toggleButton = findViewById(R.id.gatherAttendanceButton);
-        toggleButton.setText(R.string.gather_attendance);
-        toggleButton.setOnClickListener(this::gatherAttendance);
+        changeGatheringButton(false);
 
         new AlertDialog.Builder(TeacherActivity.this)
                 .setTitle(R.string.gathering_attendance_failed_title)
@@ -72,5 +61,42 @@ public class TeacherActivity extends AppCompatActivity {
                 .show();
 
         Log.e("teacher", "scan failed: " + errorCode);
+    }
+
+    private void changeGatheringButton(boolean isGathering) {
+        Button toggleButton = findViewById(R.id.gatherAttendanceButton);
+        if (isGathering) {
+            toggleButton.setText(R.string.stop_gathering_attendance);
+            toggleButton.setOnClickListener(this::stopGatheringAttendance);
+        } else {
+            toggleButton.setText(R.string.gather_attendance);
+            toggleButton.setOnClickListener(this::gatherAttendance);
+        }
+    }
+
+
+    // Table management
+
+    private ScanCallback scanCallback;
+    private Map<String, Student> students = new HashMap<>();
+
+    public void addStudentManually(View v) {
+        TextView fullnameInput = findViewById(R.id.addStudentManuallyFullnameInput);
+        addStudentToTheTable(fullnameInput.getText().toString());
+        fullnameInput.setText("");
+    }
+
+    private void addStudentToTheTable(String name) {
+        if (students.containsKey(name)) return;
+        Student student = new Student(TeacherActivity.this, name);
+        students.put(name, student);
+        ((TableLayout) findViewById(R.id.attendanceTable)).addView(student.getRowView());
+    }
+
+    public void removeStudentFromTheTable(String name) {
+        Student student = students.get(name);
+        if (student == null) return;
+        students.remove(name);
+        ((TableLayout) findViewById(R.id.attendanceTable)).removeView(student.getRowView());
     }
 }

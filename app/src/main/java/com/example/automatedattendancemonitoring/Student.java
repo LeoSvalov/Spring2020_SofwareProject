@@ -1,6 +1,5 @@
 package com.example.automatedattendancemonitoring;
 
-import android.app.Activity;
 import android.widget.Button;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -10,7 +9,7 @@ import android.widget.TextView;
  */
 class Student {
 
-    Student(Activity activity, String name) {
+    Student(TeacherActivity activity, String name) {
         TextView nameElement = new TextView(activity);
         nameElement.setText(name);
 
@@ -19,19 +18,22 @@ class Student {
 
         Button pointsMinusOneButton = new Button(activity);
         pointsMinusOneButton.setText("-");
-        pointsMinusOneButton.setWidth(pointsMinusOneButton.getHeight());
         pointsMinusOneButton.setOnClickListener(v -> changePoints(-1));
 
         Button pointsPlusOneButton = new Button(activity);
         pointsPlusOneButton.setText("+");
-        pointsPlusOneButton.setWidth(pointsPlusOneButton.getHeight());
         pointsPlusOneButton.setOnClickListener(v -> changePoints(1));
+
+        Button removeButton = new Button(activity);
+        removeButton.setText("X");
+        removeButton.setOnClickListener(v -> activity.removeStudentFromTheTable(name));
 
         row = new TableRow(activity);
         row.addView(nameElement);
         row.addView(pointsMinusOneButton);
         row.addView(pointsElement);
         row.addView(pointsPlusOneButton);
+        row.addView(removeButton);
     }
 
 

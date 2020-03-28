@@ -3,7 +3,7 @@
     <string name="gather_attendance">Gather attendance</string>
     <string name="stop_gathering_attendance">Stop gathering attendance</string>
     <string name="mark_me">Mark me</string>
-    <string name="fullname_input_hint">Input your full name</string>
+    <string name="fullname_input_hint">Input full name</string>
     <string name="table_header_fullname">Full name</string>
     <string name="table_header_participation">Points</string>
     <string name="bluetooth_enabling_warning">Bluetooth will be automatically enabled</string>
@@ -15,4 +15,5 @@
         Check app permissions and try again</string>
     <string name="trying_to_start_marking">Trying to start marking</string>
     <string name="marking_started">Sending data to teacher</string>
+    <string name="add_student_button_text">Add student</string>
 </resources>

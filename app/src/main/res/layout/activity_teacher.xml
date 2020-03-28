@@ -31,13 +31,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bluetoothEnablingWarning"
-        app:layout_constraintVertical_bias="0.506">
+        app:layout_constraintTop_toBottomOf="@+id/addStudentManuallyFullnameInput">
 
         <TableRow
-            tools:ignore="UselessParent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            tools:ignore="UselessParent">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -59,11 +58,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:text="@string/bluetooth_enabling_warning"
-        app:layout_constraintBottom_toTopOf="@+id/attendanceTable"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gatherAttendanceButton" />
+
+    <EditText
+        android:id="@+id/addStudentManuallyFullnameInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:autofillHints=".AUTOFILL_HINT_PERSON_NAME"
+        android:ems="10"
+        android:hint="@string/fullname_input_hint"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/attendanceTable"
+        app:layout_constraintEnd_toStartOf="@+id/addStudentManuallyButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bluetoothEnablingWarning" />
+
+    <Button
+        android:id="@+id/addStudentManuallyButton"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:onClick="addStudentManually"
+        android:text="@string/add_student_button_text"
+        app:layout_constraintBottom_toBottomOf="@+id/addStudentManuallyFullnameInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/addStudentManuallyFullnameInput"
+        app:layout_constraintTop_toTopOf="@+id/addStudentManuallyFullnameInput"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
