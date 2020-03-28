@@ -49,12 +49,12 @@ public final class BluetoothHelper {
     }
 
     /**
-     * The UUID used to identify this app
+     * The UUID used to identify the app
      */
     public static final ParcelUuid UUID = ParcelUuid.fromString("00000000-0000-1000-8000-00805F9B34FB");
 
     /**
-     * Default bluetooth adapter
+     * Default bluetooth adapter. ADAPTER should be checked for null before using this class.
      */
     public static final BluetoothAdapter ADAPTER = BluetoothAdapter.getDefaultAdapter();
 

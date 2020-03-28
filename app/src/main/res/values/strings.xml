@@ -16,4 +16,7 @@
     <string name="trying_to_start_marking">Trying to start marking</string>
     <string name="marking_started">Sending data to teacher</string>
     <string name="add_student_button_text">Add student</string>
+    <string name="no_bluetooth_title">Bluetooth not supported</string>
+    <string name="no_bluetooth_message">Your device has no bluetooth support,
+        so the app is not supported. Sorry :(</string>
 </resources>
