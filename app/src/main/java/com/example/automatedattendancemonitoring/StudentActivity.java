@@ -22,7 +22,7 @@ public class StudentActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (advertiseCallback != null) {
+        if (advertiseCallback != null && BluetoothHelper.ADAPTER.getBluetoothLeAdvertiser() != null) {
             BluetoothHelper.ADAPTER.getBluetoothLeAdvertiser().stopAdvertising(advertiseCallback);
         }
         super.onDestroy();

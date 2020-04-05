@@ -24,7 +24,7 @@ public class TeacherActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (scanCallback != null) {
+        if (scanCallback != null && BluetoothHelper.ADAPTER.getBluetoothLeScanner() != null) {
             BluetoothHelper.ADAPTER.getBluetoothLeScanner().stopScan(scanCallback);
         }
         super.onDestroy();
