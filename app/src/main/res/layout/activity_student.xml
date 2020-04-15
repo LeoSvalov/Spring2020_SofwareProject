@@ -6,36 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".StudentActivity">
 
-    <EditText
-        android:id="@+id/fullnameInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:autofillHints=".AUTOFILL_HINT_PERSON_NAME"
-        android:ems="10"
-        android:hint="@string/fullname_input_hint"
-        android:inputType="textPersonName"
-        android:maxLength="20"
-        app:layout_constraintBottom_toTopOf="@+id/bluetoothEnablingWarning"
-        app:layout_constraintEnd_toStartOf="@+id/markMeButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/markMeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginTop="8dp"
         android:onClick="markMe"
         android:text="@string/mark_me"
-        app:layout_constraintBottom_toBottomOf="@+id/fullnameInput"
+        app:layout_constraintBottom_toTopOf="@+id/bluetoothEnablingWarning"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/fullnameInput"
-        app:layout_constraintTop_toTopOf="@+id/fullnameInput" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fullnameTextView" />
 
     <TextView
         android:id="@+id/bluetoothEnablingWarning"
@@ -45,6 +26,16 @@
         android:text="@string/bluetooth_enabling_warning"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fullnameInput" />
+        app:layout_constraintTop_toBottomOf="@+id/markMeButton" />
+
+    <TextView
+        android:id="@+id/fullnameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/markMeButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

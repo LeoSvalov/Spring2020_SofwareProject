@@ -6,18 +6,27 @@ import android.bluetooth.le.AdvertiseSettings;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class StudentActivity extends AppCompatActivity {
     private AdvertiseCallback advertiseCallback;
+    private String fullname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student);
+
+        fullname = getIntent().getStringExtra("fullname");
+        if (fullname == null) {
+            Log.e("student", "No fullname provided");
+            Toast.makeText(StudentActivity.this, R.string.login_error, Toast.LENGTH_LONG).show();
+            finish();
+        }
+        ((TextView) findViewById(R.id.fullnameTextView)).setText(fullname);
     }
 
     @Override
@@ -30,14 +39,12 @@ public class StudentActivity extends AppCompatActivity {
 
     public void markMe(View v) {
         findViewById(R.id.markMeButton).setEnabled(false);
-        findViewById(R.id.fullnameInput).setEnabled(false);
 
         Toast.makeText(StudentActivity.this, R.string.trying_to_start_marking, Toast.LENGTH_LONG).show();
 
-        EditText fullnameInput = findViewById(R.id.fullnameInput);
         advertiseCallback = BluetoothHelper.advertise(
                 StudentActivity.this,
-                fullnameInput.getText().toString(),
+                fullname,
                 this::advertisementStarted,
                 this::advertisementFailed
         );
@@ -49,7 +56,6 @@ public class StudentActivity extends AppCompatActivity {
 
     private void advertisementFailed(int errorCode) {
         findViewById(R.id.markMeButton).setEnabled(true);
-        findViewById(R.id.fullnameInput).setEnabled(true);
 
         new AlertDialog.Builder(StudentActivity.this)
                 .setTitle(R.string.marking_failed_title)

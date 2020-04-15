@@ -6,25 +6,44 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/button6"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:onClick="showTeacherActivity"
-        android:text="I'm a teacher"
+        android:layout_marginStart="8dp"
+        android:text="@string/user_type_teacher"
+        app:layout_constraintBottom_toBottomOf="@+id/userTypeSwitch"
+        app:layout_constraintStart_toEndOf="@+id/userTypeSwitch"
+        app:layout_constraintTop_toTopOf="@+id/userTypeSwitch" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:onClick="trySignIn"
+        android:text="@string/sign_in_button_text"
+        app:layout_constraintEnd_toEndOf="@+id/userTypeSwitch"
+        app:layout_constraintStart_toStartOf="@+id/userTypeSwitch"
+        app:layout_constraintTop_toBottomOf="@+id/userTypeSwitch" />
+
+    <Switch
+        android:id="@+id/userTypeSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button7"
+    <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:onClick="showStudentActivity"
-        android:text="I'm a student"
-        app:layout_constraintEnd_toEndOf="@+id/button6"
-        app:layout_constraintStart_toStartOf="@+id/button6"
-        app:layout_constraintTop_toBottomOf="@+id/button6" />
+        android:layout_marginEnd="8dp"
+        android:text="@string/user_type_student"
+        app:layout_constraintBottom_toBottomOf="@+id/userTypeSwitch"
+        app:layout_constraintEnd_toStartOf="@+id/userTypeSwitch"
+        app:layout_constraintTop_toTopOf="@+id/userTypeSwitch" />
 </androidx.constraintlayout.widget.ConstraintLayout>

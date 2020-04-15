@@ -19,4 +19,8 @@
     <string name="no_bluetooth_title">Bluetooth not supported</string>
     <string name="no_bluetooth_message">Your device has no bluetooth support,
         so the app is not supported. Sorry :(</string>
+    <string name="sign_in_button_text">Sign in via Google</string>
+    <string name="user_type_student">Student</string>
+    <string name="user_type_teacher">Teacher</string>
+    <string name="login_error">Could not log in with you Google account. Check permissions and try again.</string>
 </resources>
