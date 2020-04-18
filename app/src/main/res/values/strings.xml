@@ -23,4 +23,7 @@
     <string name="user_type_student">Student</string>
     <string name="user_type_teacher">Teacher</string>
     <string name="login_error">Could not log in with you Google account. Check permissions and try again.</string>
+    <string name="add_student_error">Student \"%s\" was connected, but not added due to connection error.</string>
+    <string name="remove_student_error">Student was not deleted due to connection error.</string>
+    <string name="update_points_error">Student\'s points was not updated due to connection error.</string>
 </resources>

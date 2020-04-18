@@ -65,9 +65,10 @@ public class MainActivity extends AppCompatActivity {
                 boolean isTeacher = ((Switch) findViewById(R.id.userTypeSwitch)).isChecked();
                 Class<? extends Activity> nextActivity = isTeacher ? TeacherActivity.class : StudentActivity.class;
                 Intent nextActivityIntent = new Intent(MainActivity.this, nextActivity);
-                if (!isTeacher) {
-                    String fullname = account.getGivenName() + " " + account.getFamilyName();
-                    nextActivityIntent.putExtra("fullname", fullname);
+                if (isTeacher) {
+                    nextActivityIntent.putExtra("googleId", account.getId());
+                } else {
+                    nextActivityIntent.putExtra("fullname", account.getGivenName() + " " + account.getFamilyName());
                 }
                 startActivity(nextActivityIntent);
             } catch (ApiException e) {

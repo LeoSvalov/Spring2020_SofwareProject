@@ -8,18 +8,30 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 public class TeacherActivity extends AppCompatActivity {
+    private final String lessonId = UUID.randomUUID().toString();
+    private String teacherId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher);
+
+        teacherId = getIntent().getStringExtra("googleId");
+        if (teacherId == null) {
+            Log.e("teacher", "No google id");
+            Toast.makeText(TeacherActivity.this, R.string.login_error, Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     @Override
@@ -38,7 +50,7 @@ public class TeacherActivity extends AppCompatActivity {
 
         scanCallback = BluetoothHelper.scan(
                 TeacherActivity.this,
-                this::addStudentToTheTable,
+                this::addStudent,
                 this::gatheringFailed
         );
     }
@@ -82,21 +94,36 @@ public class TeacherActivity extends AppCompatActivity {
 
     public void addStudentManually(View v) {
         TextView fullnameInput = findViewById(R.id.addStudentManuallyFullnameInput);
-        addStudentToTheTable(fullnameInput.getText().toString());
+        addStudent(fullnameInput.getText().toString());
         fullnameInput.setText("");
     }
 
-    private void addStudentToTheTable(String name) {
+    private void addStudent(String name) {
+        if (Objects.equals(name, "")) return;
         if (students.containsKey(name)) return;
-        Student student = new Student(TeacherActivity.this, name);
-        students.put(name, student);
-        ((TableLayout) findViewById(R.id.attendanceTable)).addView(student.getRowView());
+
+        // to database
+        DatabaseHelper.addRecord(TeacherActivity.this, teacherId, lessonId, name, id -> {
+            // to list
+            Student student = new Student(TeacherActivity.this, name, id);
+            students.put(name, student);
+
+            // to table
+            ((TableLayout) findViewById(R.id.attendanceTable)).addView(student.row);
+        });
     }
 
-    public void removeStudentFromTheTable(String name) {
+    public void removeStudent(String name) {
         Student student = students.get(name);
         if (student == null) return;
-        students.remove(name);
-        ((TableLayout) findViewById(R.id.attendanceTable)).removeView(student.getRowView());
+
+        // from database
+        DatabaseHelper.removeRecord(TeacherActivity.this, student.databaseId, () -> {
+            // from list
+            students.remove(name);
+
+            // from table
+            ((TableLayout) findViewById(R.id.attendanceTable)).removeView(student.row);
+        });
     }
 }

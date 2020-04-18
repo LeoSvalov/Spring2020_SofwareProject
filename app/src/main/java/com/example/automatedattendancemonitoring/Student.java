@@ -1,5 +1,6 @@
 package com.example.automatedattendancemonitoring;
 
+import android.app.Activity;
 import android.widget.Button;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -9,7 +10,14 @@ import android.widget.TextView;
  */
 class Student {
 
-    Student(TeacherActivity activity, String name) {
+    final TableRow row;
+    private final Activity activity;
+    final int databaseId;
+
+    Student(TeacherActivity activity, String name, int databaseId) {
+        this.databaseId = databaseId;
+        this.activity = activity;
+
         TextView nameElement = new TextView(activity);
         nameElement.setText(name);
 
@@ -26,7 +34,7 @@ class Student {
 
         Button removeButton = new Button(activity);
         removeButton.setText("X");
-        removeButton.setOnClickListener(v -> activity.removeStudentFromTheTable(name));
+        removeButton.setOnClickListener(v -> activity.removeStudent(name));
 
         row = new TableRow(activity);
         row.addView(nameElement);
@@ -37,14 +45,6 @@ class Student {
     }
 
 
-    // The row in table with all necessary columns
-
-    private final TableRow row;
-
-    TableRow getRowView() {
-        return row;
-    }
-
 
     // To handle participation points
 
@@ -53,8 +53,12 @@ class Student {
     private final TextView pointsElement;
 
     private void changePoints(int d) {
-        points += d;
-        pointsElement.setText(String.valueOf(points));
+        int newPoins = points + d;
+        DatabaseHelper.updateRecord(activity, databaseId, newPoins, () -> {
+            System.out.println("test");
+            points = newPoins;
+            pointsElement.setText(String.valueOf(points));
+        });
     }
 
 }
