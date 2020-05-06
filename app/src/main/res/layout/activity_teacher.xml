@@ -10,14 +10,15 @@
         android:id="@+id/gatherAttendanceButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="4dp"
         android:layout_marginBottom="8dp"
+        android:enabled="false"
         android:onClick="gatherAttendance"
         android:text="@string/gather_attendance"
         app:layout_constraintBottom_toTopOf="@+id/bluetoothEnablingWarning"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/subjectSpinner" />
 
     <TableLayout
         android:id="@+id/attendanceTable"
@@ -82,6 +83,7 @@
         android:id="@+id/addStudentManuallyButton"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:enabled="false"
         android:onClick="addStudentManually"
         android:text="@string/add_student_button_text"
         app:layout_constraintBottom_toBottomOf="@+id/addStudentManuallyFullnameInput"
@@ -89,5 +91,39 @@
         app:layout_constraintStart_toEndOf="@+id/addStudentManuallyFullnameInput"
         app:layout_constraintTop_toTopOf="@+id/addStudentManuallyFullnameInput"
         app:layout_constraintVertical_bias="1.0" />
+
+    <Spinner
+        android:id="@+id/subjectSpinner"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/gatherAttendanceButton"
+        app:layout_constraintEnd_toStartOf="@+id/typeSpinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/typeSpinner"
+        android:layout_width="150dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/subjectSpinner"
+        app:layout_constraintEnd_toStartOf="@+id/setLessonDataButton"
+        app:layout_constraintStart_toEndOf="@+id/subjectSpinner"
+        app:layout_constraintTop_toTopOf="@+id/subjectSpinner"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/setLessonDataButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:onClick="setLessonData"
+        android:text="@string/set_lesson_data_button_text"
+        app:layout_constraintBottom_toBottomOf="@+id/typeSpinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/typeSpinner"
+        app:layout_constraintTop_toTopOf="@+id/typeSpinner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

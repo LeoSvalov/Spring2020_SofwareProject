@@ -14,6 +14,9 @@ It was a project on Software Project Spring 2020 (2nd year) course in Innopolis 
 
 ## How it looks like
 
+Actual interface differs (a little bit) from what shown below.<br>
+These gifs just show an idea of how app looks like and what it can do. 
+
 | Student's interface | Teacher's interface |
 | --- | --- |
 | <img src="https://i.imgur.com/7aHX9PH.gif" width="240" height="480"> | <img src="https://i.imgur.com/a23zwLf.gif" width="240" height="480"> |

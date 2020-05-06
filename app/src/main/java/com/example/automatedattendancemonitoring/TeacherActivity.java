@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +33,9 @@ public class TeacherActivity extends AppCompatActivity {
             Toast.makeText(TeacherActivity.this, R.string.login_error, Toast.LENGTH_LONG).show();
             finish();
         }
+
+        DatabaseHelper.setSpinnerItems(TeacherActivity.this, findViewById(R.id.subjectSpinner), "lesson_subjects");
+        DatabaseHelper.setSpinnerItems(TeacherActivity.this, findViewById(R.id.typeSpinner), "lesson_types");
     }
 
     @Override
@@ -43,7 +47,24 @@ public class TeacherActivity extends AppCompatActivity {
     }
 
 
-    //Automatic gathering
+    // Lesson creation
+
+    public void setLessonData(View v) {
+        findViewById(R.id.gatherAttendanceButton).setEnabled(true);
+        findViewById(R.id.addStudentManuallyButton).setEnabled(true);
+
+        findViewById(R.id.subjectSpinner).setEnabled(false);
+        findViewById(R.id.typeSpinner).setEnabled(false);
+        findViewById(R.id.setLessonDataButton).setEnabled(false);
+    }
+
+    private String getSpinnerItem(int resId) {
+        Spinner spinner = findViewById(resId);
+        return (String) spinner.getSelectedItem();
+    }
+
+
+    // Automatic gathering
 
     public void gatherAttendance(View v) {
         changeGatheringButton(true);
@@ -103,7 +124,7 @@ public class TeacherActivity extends AppCompatActivity {
         if (students.containsKey(name)) return;
 
         // to database
-        DatabaseHelper.addRecord(TeacherActivity.this, teacherId, lessonId, name, id -> {
+        DatabaseHelper.addRecord(TeacherActivity.this, teacherId, lessonId, name, getSpinnerItem(R.id.subjectSpinner), getSpinnerItem(R.id.typeSpinner), id -> {
             // to list
             Student student = new Student(TeacherActivity.this, name, id);
             students.put(name, student);

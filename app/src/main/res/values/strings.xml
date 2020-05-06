@@ -26,4 +26,17 @@
     <string name="add_student_error">Student \"%s\" was connected, but not added due to connection error.</string>
     <string name="remove_student_error">Student was not deleted due to connection error.</string>
     <string name="update_points_error">Student\'s points was not updated due to connection error.</string>
+    <string name="set_lesson_data_button_text">OK</string>
+    <string-array name="lesson_subjects">
+        <item>Subject not chosen</item>
+        <item>SWP</item>
+        <item>Networks</item>
+        <item>Sport</item>
+    </string-array>
+    <string-array name="lesson_types">
+        <item>Type not chosen</item>
+        <item>Lecture</item>
+        <item>Tutorial</item>
+        <item>Lab</item>
+    </string-array>
 </resources>

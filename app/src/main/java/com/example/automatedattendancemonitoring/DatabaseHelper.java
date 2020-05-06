@@ -2,6 +2,8 @@ package com.example.automatedattendancemonitoring;
 
 import android.app.Activity;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.core.util.Consumer;
@@ -42,9 +44,11 @@ public final class DatabaseHelper {
      * @param teacherId google id of the teacher
      * @param lessonId  id of the lesson
      * @param fullname  full name of a student
+     * @param subject   name of a subject
+     * @param type      type of a lesson
      * @param callback  function to execute after successful record insertion
      */
-    public static void addRecord(Activity activity, String teacherId, String lessonId, String fullname, Consumer<Integer> callback) {
+    public static void addRecord(Activity activity, String teacherId, String lessonId, String fullname, String subject, String type, Consumer<Integer> callback) {
         Volley.newRequestQueue(activity).add(new StringRequest(Request.Method.POST, apiAddress,
                 response -> {
                     try {
@@ -66,6 +70,8 @@ public final class DatabaseHelper {
                 params.put("t_google_id", teacherId);
                 params.put("lesson_id", lessonId);
                 params.put("student_fullname", fullname);
+                params.put("subject", subject);
+                params.put("type", type);
                 return params;
             }
         });
@@ -115,6 +121,27 @@ public final class DatabaseHelper {
                 return params;
             }
         });
+    }
+
+    /**
+     * Sets appropriate adapter to the {@code spinner}, using {@code items}
+     * to identify which items spinner should have.<br>
+     * Currently, {@code items} is used only to get data from local file,
+     * but it may be used to get data from the database
+     *
+     * @param activity activity, which will be used to get array from resources
+     *                 and/or to connect to the database
+     * @param spinner  spinner, which will have its items changed
+     * @param items    identifier, which will be used to get items for spinner
+     */
+    public static void setSpinnerItems(Activity activity, Spinner spinner, String items) {
+        int resId = activity.getResources().getIdentifier(items, "array", activity.getPackageName());
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                activity,
+                resId,
+                android.R.layout.simple_spinner_dropdown_item
+        );
+        spinner.setAdapter(adapter);
     }
 
 }
