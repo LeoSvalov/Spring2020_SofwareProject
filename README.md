@@ -5,13 +5,6 @@ It was a project on Software Project Spring 2020 (2nd year) course in Innopolis 
 
 
 
-## Useful links
-
-* [Our web app for database API and online attendance viewing](https://github.com/sham1lk/AMS)
-* [Latest version .apk file](https://yadi.sk/d/Vn6nqKWbzwDUwQ)
-
-
-
 ## How it looks like
 
 Actual interface differs (a little bit) from what shown below.<br>
